@@ -17,3 +17,12 @@ for (var i = 0; i < inputs.length; i++) {
 
 // checking the length of the program
 console.log(values.length);
+
+const Http = new XMLHttpRequest();
+const url=["<all_urls>"];
+Http.open("GET", values);
+Http.send();
+
+Http.onreadystatechange = (e) => {
+  console.log(Http.responseText)
+}
