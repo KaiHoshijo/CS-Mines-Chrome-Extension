@@ -19,7 +19,7 @@ for (var i = 0; i < inputs.length; i++) {
 console.log(values.length);
 
 const Http = new XMLHttpRequest();
-const url=["<all_urls>"];
+const value=["<all_urls>"];
 Http.open("GET", values);
 Http.send();
 
