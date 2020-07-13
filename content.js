@@ -29,7 +29,6 @@ function getDivRadioInput()
     return document.querySelectorAll("div[role='radio']");
 }
 
-<<<<<<< HEAD
 // split up the div inputs into their respective multiple choice sections
 function splitDivRadioInput() 
 {
@@ -76,5 +75,3 @@ function randomDivRadioInput() {
     }
 }
 
-=======
->>>>>>> 3c8411099fe69b5d1f1c30cfd679d155c5c42259
