@@ -1,5 +1,7 @@
 console.log("Hello World!");
 
+// getter functions 
+
 // finds all div's that act
 // as multiple choice for the page
 function getDivRadioInput() 
@@ -7,6 +9,27 @@ function getDivRadioInput()
     // returns all div's with a radio role
     return document.querySelectorAll("div[role='radio']");
 }
+
+// find all the multiple choice that 
+// are input files with radios
+function getRadioInputs()
+{
+    // getting all the inputs for the document
+    var inputs = document.getElementsByTagName("input");
+    // will be populated with all inputs that actually have values
+    var values = [];
+
+    // populating the values field
+    // These fields will only have inputs from 
+    for (var i = 0; i < inputs.length; i++) {
+        var input = inputs[i];
+        if (input.name != "") {
+            values.push(input);
+        }
+    }
+    
+    return values;
+} 
 
 // splits the input
 // can be div or radio
@@ -44,10 +67,11 @@ function splitInput(inputFunction, attr)
     return sections;
 }
 
+// splitter functions
+
 // split up the div inputs into their respective multiple choice sections
 function splitDivRadioInput() 
 {
-
     var inputFunction = getDivRadioInput;
     // from what I noticed about each div multiple choice,
     // there's a aria-posinset that assigns each of them together
@@ -56,60 +80,64 @@ function splitDivRadioInput()
     return splitInput(inputFunction, attr);
 }
 
-// random multiple choice div
-function randomDivRadioInput() {
-    var sections = splitDivRadioInput();
-    for (var i = 0; i < sections.length; i++) {
-        sections[i][Math.floor(Math.random() * sections[i].length)].click();
-    }
-}
-
-
-// find all the multiple choice that 
-// are input files with radios
-function getRadioInputs()
-{
-    // getting all the inputs for the document
-    var inputs = document.getElementsByTagName("input");
-    // will be populated with all inputs that actually have values
-    var values = [];
-
-    // populating the values field
-    // These fields will only have inputs from 
-    for (var i = 0; i < inputs.length; i++) {
-        var input = inputs[i];
-        if (input.name != "") {
-            values.push(input);
-        }
-    }
-    
-    return values;
-} 
-
 // finding the sections for the multiple choice
 function splitRadioInput() 
 {
-
     var inputFunction = getRadioInputs;
     // for radio inputs, the id seems to be what sets different
     // sections for multiple choice
-    var attr = 'id';
-
+    var attr = "id";
     return splitInput(inputFunction, attr);
 }
 
-// random multiple choice div
-function randomRadioInput() {
-    var sections = splitRadioInput();
+// random assignment functions
+
+// get random multiple choice
+// can be used for both div radio and radio input tags
+function getRandom(inputFunction, actionFunction) 
+{
+    // gets the splitter function from input function
+    var sections = inputFunction();
+    // iterating through each object and enabling it
+    // this is different for div radio and radio input,
+    // so an action function is needed here
     for (var i = 0; i < sections.length; i++) {
-        sections[i][Math.floor(Math.random() * sections[i].length)].checked = true;
+        actionFunction(sections[i][Math.floor(Math.random() * sections[i].length)]);
     }
 }
 
-randomRadioInput();
+// enablers for the multiple choice
+function enableDivRadioInput(divRadio)
+{
+    divRadio.click();
+}
+function enableRadioInput(radio)
+{
+    radio.checked = true;
+}
 
+// random multiple choice div
+function randomDivRadioInput() {
+    var inputFunction = splitDivRadioInput;
+    var actionFunction = enableDivRadioInput;
+    getRandom(inputFunction, actionFunction);
+}
 
+// random multiple choice radio 
+function randomRadioInput() {
+    var inputFunction = splitRadioInput;
+    var actionFunction = enableRadioInput;
+    getRandom(inputFunction, actionFunction);
+}
 
+function runMultipleChoice() {
+    var divInput = getDivRadioInput();
+    var radioInput = getRadioInputs();
+    if (divInput.length > 0) randomDivRadioInput();
+    if (radioInput.length > 0) randomRadioInput();
 
+}
+
+runMultipleChoice();
 
 
