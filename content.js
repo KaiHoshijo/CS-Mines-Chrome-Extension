@@ -103,6 +103,8 @@ function getRandom(inputFunction, actionFunction)
     // so an action function is needed here
     for (var i = 0; i < sections.length; i++) {
         actionFunction(sections[i][Math.floor(Math.random() * sections[i].length)]);
+        // Dylan's job 
+        // time.sleep(random.randint(10, 30))
     }
 }
 
@@ -138,6 +140,11 @@ function runMultipleChoice() {
 
 }
 
+// run Dylan's section
 runMultipleChoice();
+
+// run Ava's section 
+// find button with role = submit
+// button.click()
 
 
