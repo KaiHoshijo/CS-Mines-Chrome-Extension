@@ -100,6 +100,5 @@ class multipleChoice {
 // run Dylan's section
 // runMultipleChoice();
 
-// run Ava's section 
-// find button with role = submit
-// button.click()
+
+$(".submit").click();
