@@ -7,7 +7,7 @@
         "activeTab"
     ],
     "background" : {
-        "scripts" : ["background.js"],
+        "scripts" : ["context.js"],
         "persistent" : false
     }
 }
