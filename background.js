@@ -45,7 +45,13 @@ function getCheckboxInputs() {
 }
 
 function getInputText() {
-    return document.querySelectorAll("[type='text']"); 
+    var x = [];
+    document.querySelectorAll("[type='text']").forEach((element) => {
+        if (element.getAttribute("title") != "Search" && element.getAttribute("aria-label") != "Search") {
+            x.push(element);
+        }
+    }); 
+    return x;
 }
 
 function getTextarea() {
@@ -53,6 +59,7 @@ function getTextarea() {
 }
 
 // splits the input
+// for div radio inputs
 function splitInput(choices)
 {
     var attr = "aria-posinset";
@@ -160,8 +167,6 @@ async function getRandom(sections, actionFunction)
         await sleep(2000)
         actionFunction(button); 
         fireEvents(button);
-        // Dylan's job 
-        // time.sleep(random.randint(10, 30))
     }
 }
 
@@ -175,10 +180,10 @@ function randomNumber() {
     return numbers.charAt(Math.floor(Math.random() * numbers.length));
 }
 
-function randomWord(length) {
+function randomWord(length, actionFunction) {
     let result = "";
     for (var i = 0; i < length; i++) {
-        result += randomLetter();
+        result += actionFunction();
     }
     return result;
 }
@@ -186,10 +191,14 @@ function randomWord(length) {
 function inputText(input) {
     let result = "";
     let numOfWords = Math.floor(Math.random() * 10) + 1;
-    for (var i = 0; i < numOfWords; i++) {
-        result += randomWord(Math.floor(Math.random() * 10) + 2) + " ";
+    if (input.getAttribute("aria-labelledby") != null && input.getAttribute("aria-labelledby").indexOf("i5") > -1) {
+            result += randomWord(numOfWords, randomNumber);
+    } else {
+        for (var i = 0; i < numOfWords; i++) {
+            result += randomWord(Math.floor(Math.random() * 10) + 2, randomLetter) + " ";
+        }
     }
-    // console.log(result);
+// console.log(result);
     input.value = result;
 }
 
@@ -279,4 +288,5 @@ function fillText() {
 fillText();
 runMultipleChoice();
 runCheckBox();
+console.log("Done!");
 // $(".submit").click();
