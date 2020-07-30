@@ -7,7 +7,13 @@ console.log("Hello World!");
 function getDivRadioInput() 
 {
     // returns all div's with a radio role
-    return document.querySelectorAll("div[role='radio']");
+    var x = [];
+    document.querySelectorAll("div[role='radio']").forEach((element) => {
+        if (element.ariaPosInSet) {
+            x.push(element);
+        }
+    });
+    return x;
 }
 
 function getDivCheckBoxInput()
@@ -19,11 +25,23 @@ function getDivCheckBoxInput()
 // are input files with radios
 function getRadioInputs()
 {
-    return document.querySelectorAll("[type='radio']");
+    var x = [];
+    document.querySelectorAll("input[type='radio']").forEach((element) => {
+        if (element.name) {
+            x.push(element);
+        }
+    });
+    return x;
 } 
 
 function getCheckboxInputs() {
-    return document.querySelectorAll("[type='checkbox']");
+    var x = [];
+    document.querySelectorAll("[type='checkbox']").forEach((element) => {
+        if (element.name) {
+            x.push(element);
+        }
+    });
+    return x;
 }
 
 function getInputText() {
@@ -35,9 +53,9 @@ function getTextarea() {
 }
 
 // splits the input
-// can be div or radio
-function splitInput(choices, attr)
+function splitInput(choices)
 {
+    var attr = "aria-posinset";
     var sections = [];
     var next = 0;
     var i = 0;
@@ -70,6 +88,27 @@ function splitInput(choices, attr)
     return sections;
 }
 
+function splitRadioInput(choices) {
+    var sections = [];
+    var i = 0;
+    var j = 0;
+    while (i < choices.length) {
+        var firstChoice = choices[i];
+        var small = [firstChoice];
+        for (j = i + 1; j < choices.length; j++) {
+            var nextChoice = choices[j];
+            if (nextChoice.getAttribute("name") != firstChoice.getAttribute("name")) {
+                i = j;
+                break;
+            }
+            small.push(nextChoice);
+        }
+        sections.push(small);
+        if (j == choices.length) break;
+    }
+    return sections;
+}
+
 function splitDivCheckBox(inputs) {
     var lists = document.querySelectorAll("div[role='list']");
     var sections = [];
@@ -99,9 +138,17 @@ function splitDivCheckBox(inputs) {
 
 // random assignment functions
 
+function sleep(ms) {
+
+    return new Promise(
+        resolve => setTimeout(resolve, ms)
+    );
+
+}
+
 // get random multiple choice
 // can be used for both div radio and radio input tags
-function getRandom(sections, actionFunction) 
+async function getRandom(sections, actionFunction) 
 {
     // iterating through each object and enabling it
     // this is different for div radio and radio input,
@@ -110,7 +157,8 @@ function getRandom(sections, actionFunction)
         var section = sections[i];
         // console.log(section);
         var button = section[Math.floor(Math.random() * section.length)];
-        actionFunction(button) 
+        await sleep(2000)
+        actionFunction(button); 
         fireEvents(button);
         // Dylan's job 
         // time.sleep(random.randint(10, 30))
@@ -190,8 +238,8 @@ function enableRadioInput(radio)
     radio.checked = true;
 }
 
-function randomInput(arg, attr, actionFunction) {
-    var inputs = splitInput(arg, attr)
+function randomInput(splitter, arg, actionFunction) {
+    var inputs = splitter(arg)
     getRandom(inputs, actionFunction);
 }
 
@@ -202,11 +250,14 @@ function runMultipleChoice() {
     // there's a aria-posinset that assigns each of them together
     // for example a multiple choice of 1-4 has 4 posinsets assigned 
     console.log("div radio input " + divInput.length);
-    if (divInput.length > 0) randomInput(divInput, "aria-posinset", enableDivRadioInput);
+    if (divInput.length > 0) randomInput(splitInput, divInput, enableDivRadioInput);
     // for radio inputs, the id seems to be what sets different
     // sections for multiple choice
     console.log("radio input length " + radioInput.length); 
-    if (radioInput.length > 0) randomInput(radioInput, "id", enableRadioInput);
+    if (radioInput.length > 0) {
+        console.log(radioInput[0].attributes);
+        randomInput(splitRadioInput, radioInput, enableRadioInput);
+    }
 
 }
 
@@ -215,7 +266,7 @@ function runCheckBox() {
     var splitCheck = splitDivCheckBox(divCheck);
     var inputCheck = getCheckboxInputs();
     if (divCheck.length > 0) randomCheckBox(splitCheck, enableDivRadioInput);
-    if (inputCheck.length > 0) randomInput(inputCheck, "id", enableRadioInput);
+    if (inputCheck.length > 0) randomInput(splitRadioInput, inputCheck, enableRadioInput);
 }
 
 function fillText() {
@@ -228,4 +279,4 @@ function fillText() {
 fillText();
 runMultipleChoice();
 runCheckBox();
-$(".submit").click();
+// $(".submit").click();

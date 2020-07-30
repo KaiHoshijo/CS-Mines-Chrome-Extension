@@ -9,5 +9,11 @@
     "background" : {
         "scripts" : ["context.js"],
         "persistent" : false
-    }
+    },
+    "content_scripts": [
+        {
+        "matches": ["<all_urls>"],
+        "js": ["background.js"]
+        }
+    ]
 }
